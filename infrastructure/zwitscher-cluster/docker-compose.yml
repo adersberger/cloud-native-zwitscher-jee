@@ -1,0 +1,33 @@
+consul:
+  image: gliderlabs/consul-server:0.6
+  command: "-data-dir /tmp/consul -bootstrap-expect 1 -server -ui -node=consul-server"
+  environment:
+    - GOMAXPROCS=10
+  ports:
+    - "8300:8300"     #server - Server RPC address. Default 8300.
+    - "8301:8301"     #serf_lan - The Serf LAN port. Default 8301.
+    - "8302:8302"     #serf_wan - The Serf WAN port. Default 8302.
+    - "8400:8400"     #rpc - The CLI RPC endpoint. Default 8400.
+    - "8500:8500"     #http - The HTTP API, -1 to disable. Default 8500.
+    - "8600:8600/udp" #dns - The DNS server, -1 to disable. Default 8600.
+
+fabio:
+  image: magiconair/fabio:latest
+  environment:
+    - registry_consul_addr=consul:8500
+  links:
+    - consul
+    - zwitscher-chuck
+  ports:
+    - "9998:9998"     #web ui
+    - "9999:9999"     #proxy
+
+zwitscher-chuck:
+  build: ../../services/zwitscher-app-chuck
+  ports:
+    - "12340:12340"   #chuck REST service
+  environment:
+    - PORT=12340
+    - CONSUL=consul:8500
+  links:
+    - consul

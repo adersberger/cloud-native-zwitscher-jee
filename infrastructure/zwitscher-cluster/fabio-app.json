@@ -1,0 +1,23 @@
+{
+  "id": "fabio",
+  "cpus": 1,
+  "mem": 256,
+  "disk": 0,
+  "instances": 1,
+  "env": {
+    "registry_consul_addr": "consul.marathon.mesos:8500"
+  },
+  "container": {
+    "docker": {
+      "image": "magiconair/fabio:latest",
+      "forcePullImage": true,
+      "privileged": false,
+      "network": "HOST",
+      "portDefinitions": [
+        { "port": 9998, "protocol": "tcp", "name": "web-ui" },
+        { "port": 9999, "protocol": "tcp", "name": "proxy-port" }
+      ],
+      "requirePorts" : true
+    }
+  }
+}

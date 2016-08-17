@@ -1,0 +1,31 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'com.kumuluz.ee:kumuluzee-core:2.0.0'
+    compile 'com.kumuluz.ee:kumuluzee-servlet-jetty:2.0.0'
+    compile 'com.kumuluz.ee:kumuluzee-jax-rs-jersey:2.0.0'
+    compile 'com.kumuluz.ee:kumuluzee-cdi-weld:2.0.0'
+    compile 'com.thetransactioncompany:cors-filter:2.1'
+    compile 'com.orbitz.consul:consul-client:0.12.3'
+    compile 'io.mikael:urlbuilder:2.0.7'
+}
+
+task copyDependencies(type: Copy) {
+    from configurations.compile
+    into 'build/dependency'
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes"
+        output.classesDir = 'build/classes'
+    }
+}

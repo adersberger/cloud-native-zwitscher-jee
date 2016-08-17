@@ -1,0 +1,126 @@
+{
+  "id": "/zwitscher",
+  "groups": [
+    {
+      "id": "/zwitscher/infrastructure",
+      "apps": [
+        {
+          "id": "consul",
+          "cpus": 1,
+          "mem": 256,
+          "disk": 0,
+          "instances": 1,
+          "cmd": "/bin/consul agent -server -ui -advertise=$HOST -config-dir=/config -data-dir=/tmp/consul -bootstrap-expect=1 -node=consul-server -client=0.0.0.0",
+          "container": {
+            "docker": {
+              "image": "gliderlabs/consul-server:0.6",
+              "forcePullImage": true,
+              "privileged": false,
+              "network": "HOST",
+              "portDefinitions": [
+                { "port": 8300, "protocol": "tcp", "name": "server-rpc" },
+                { "port": 8301, "protocol": "tcp", "name": "serf-lan" },
+                { "port": 8302, "protocol": "tcp", "name": "serf-wan" },
+                { "port": 8400, "protocol": "tcp", "name": "cli-rpc" },
+                { "port": 8500, "protocol": "tcp", "name": "http-api" },
+                { "port": 8600, "protocol": "udp", "name": "dns" }
+              ],
+              "requirePorts" : true
+            }
+          },
+          "env": {
+            "GOMAXPROCS": "10"
+          },
+          "healthChecks": [
+            {
+              "protocol": "HTTP",
+              "port": 8500,
+              "path": "/v1/status/leader",
+              "intervalSeconds": 10,
+              "timeoutSeconds": 10,
+              "maxConsecutiveFailures": 3
+            }
+          ]
+        },
+        {
+          "id": "fabio",
+          "cpus": 1,
+          "mem": 256,
+          "disk": 0,
+          "instances": 1,
+          "env": {
+            "registry_consul_addr": "consul.infrastructure.zwitscher.marathon.mesos:8500"
+          },
+          "container": {
+            "docker": {
+              "image": "magiconair/fabio:latest",
+              "forcePullImage": true,
+              "privileged": false,
+              "network": "HOST",
+              "portDefinitions": [
+                { "port": 9998, "protocol": "tcp", "name": "web-ui" },
+                { "port": 9999, "protocol": "tcp", "name": "proxy-port" }
+              ],
+              "requirePorts" : true
+            }
+          },
+          "acceptedResourceRoles":["slave_public"],
+          "healthChecks": [
+            {
+              "protocol": "HTTP",
+              "port": 9998,
+              "path": "/health",
+              "intervalSeconds": 10,
+              "timeoutSeconds": 10,
+              "maxConsecutiveFailures": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "/zwitscher/services",
+      "apps": [
+        {
+          "id": "zwitscher-chuck",
+          "cpus": 1,
+          "mem": 256,
+          "disk": 0,
+          "instances": 1,
+          "container": {
+            "docker": {
+              "image": "adersberger/zwitscher-app-chuck:1.0.0-SNAPSHOT",
+              "forcePullImage": true,
+              "privileged": false,
+              "network": "HOST",
+              "portDefinitions": [
+                { "port": 12340, "protocol": "tcp", "name": "rest-api" }
+              ],
+              "requirePorts" : true
+            }
+          },
+          "env": {
+            "PORT": "12340",
+            "CONSUL": "consul.infrastructure.zwitscher.marathon.mesos:8500"
+          },
+          "args": [
+            "-Xmx256m"
+          ],
+          "healthChecks": [
+            {
+              "protocol": "HTTP",
+              "port": 12340,
+              "path": "/metrics/ping",
+              "intervalSeconds": 10,
+              "timeoutSeconds": 10,
+              "maxConsecutiveFailures": 3
+            }
+          ],
+          "dependencies": [
+            "/zwitscher/infrastructure/consul"
+          ]
+        }
+      ]
+    }
+  ]
+}

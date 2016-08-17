@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2" }
+        maven { url "https://dl.bintray.com/seu-as-code/gradle-plugins" }
+    }
+    dependencies {
+        classpath "nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0"
+        classpath "com.bmuschko:gradle-docker-plugin:2.6.6"
+        classpath 'de.qaware.seu.as.code:seuac-credentials-plugin:2.4.0.RC3'
+    }
+}
+
+allprojects {
+    apply plugin: 'com.bmuschko.docker-remote-api'
+    apply plugin: 'de.qaware.seu.as.code.credentials'
+
+    docker {
+        url = System.env.DOCKER_HOST ?: 'https://192.168.99.100:2376'
+        certPath = file("${System.getProperty('user.home')}/.docker/machine/machines/default")
+
+        registryCredentials {
+            username = project.credentials['docker'].username
+            password = project.credentials['docker'].password
+        }
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+subprojects {
+    group = 'de.qaware.sandbox.zwitscher'
+    version = '1.0.0-SNAPSHOT'
+    apply plugin: "com.github.hierynomus.license"
+
+    license {
+        skipExistingHeaders = true
+        header rootProject.file('LICENSE')
+        includes(["**/*.java"])
+        mapping {
+            java = 'SLASHSTAR_STYLE'
+        }
+    }
+
+    task buildDockerImage(type: DockerBuildImage, dependsOn: "build") {
+        inputDir = projectDir
+        noCache = false
+        remove = true
+        tag = "adersberger/$project.name:$version"
+    }
+
+     task removeDockerImage(type: DockerRemoveImage) {
+        imageId = "adersberger/$project.name:$version"
+     }
+
+     task pushDockerImage(type: DockerPushImage) {
+        imageName = "adersberger/$project.name:$version"
+     }
+}
+
+import com.bmuschko.gradle.docker.tasks.DockerInfo
+import com.bmuschko.gradle.docker.tasks.DockerVersion
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+
+task dockerInfo(type: DockerInfo) {}
+task dockerVersion(type: DockerVersion) {}

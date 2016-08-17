@@ -1,0 +1,26 @@
+{
+  "id": "zwitscher-chuck",
+  "cpus": 1,
+  "mem": 256,
+  "disk": 0,
+  "instances": 1,
+  "container": {
+    "docker": {
+      "image": "adersberger/zwitscher-app-chuck:1.0.0-SNAPSHOT",
+      "forcePullImage": true,
+      "privileged": false,
+      "network": "HOST",
+      "portDefinitions": [
+        { "port": 12340, "protocol": "tcp", "name": "rest-api" }
+      ],
+      "requirePorts" : true
+    }
+  },
+  "env": {
+    "PORT": "12340",
+    "CONSUL": "consul.marathon.mesos:8500"
+  },
+  "args": [
+    "-Xmx256m"
+  ]
+}
