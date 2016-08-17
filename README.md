@@ -1,3 +1,5 @@
+[![MIT License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/qaware/cloud-native-zwitscher/blob/master/LICENSE)
+
 # Cloud Native Zwitscher Showcase (JEE-based)
 
 This showcase demonstrates how to build a cloud native application using
