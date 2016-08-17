@@ -13,3 +13,8 @@ hs_err_pid*
 TODO.adoc
 *.ipr
 *.iws
+/build/
+/services/zwitscher-app-board/build/
+/services/zwitscher-app-chuck/build/
+/services/zwitscher-app-history/build/
+/infrastructure/zwitscher-cluster/packet-terraform/
