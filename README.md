@@ -1,4 +1,4 @@
-[![MIT License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/qaware/cloud-native-zwitscher/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/adersberger/cloud-native-zwitscher-jee.svg?branch=master)](https://travis-ci.org/adersberger/cloud-native-zwitscher-jee) [![MIT License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/qaware/cloud-native-zwitscher/blob/master/LICENSE)
 
 # Cloud Native Zwitscher Showcase (JEE-based)
 
