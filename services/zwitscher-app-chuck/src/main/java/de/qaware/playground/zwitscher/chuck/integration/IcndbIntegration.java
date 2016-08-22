@@ -26,9 +26,11 @@ package de.qaware.playground.zwitscher.chuck.integration;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixObservableCommand;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
+import org.slf4j.Logger;
 import rx.Observable;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
@@ -54,22 +56,26 @@ public class IcndbIntegration {
             "Chuck Norris. The film was cancelled shortly after going into preproduction. No one would pay nine dollars " +
             "to see a movie fourteen seconds long.";
 
+    @Inject
+    private Logger logger;
+
     public String getRandomJoke(){
         IcndbIntegrationCommand cmd = new IcndbIntegrationCommand();
-        Response response = null;
+        Response response;
         try {
             response = cmd.observe().toBlocking().toFuture().get();
             Map<String, Map<String, String>> json = response.readEntity(Map.class);
             return json.get("value").get("joke");
         } catch (InterruptedException | ExecutionException e) {
+            logger.error("ICNDB not accessible. default joke picked", e);
             return FALLBACK_JOKE;
         }
 
     }
 
-    private static class IcndbIntegrationCommand extends HystrixObservableCommand<Response> {
+    private class IcndbIntegrationCommand extends HystrixObservableCommand<Response> {
 
-        public IcndbIntegrationCommand() {
+        IcndbIntegrationCommand() {
             super(HystrixCommandGroupKey.Factory.asKey("zwitscher"));
         }
 
