@@ -29,5 +29,6 @@ zwitscher-chuck:
   environment:
     - PORT=12340
     - CONSUL=consul:8500
+    - CONFIG_ENV=zwitscher
   links:
     - consul

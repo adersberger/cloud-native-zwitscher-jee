@@ -25,7 +25,9 @@ package de.qaware.playground.zwitscher.chuck.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import de.qaware.playground.zwitscher.chuck.integration.IcndbIntegration;
+import org.cfg4j.provider.ConfigurationProvider;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -35,17 +37,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/joke")
+@RequestScoped
 public class ChuckJokeResource {
 
     @Inject
     private IcndbIntegration icndb;
+
+    @Inject
+    private ConfigurationProvider config;
 
     @GET
     @Timed
     @Produces("application/json")
     public Response getJoke() {
         Map<String, String> json = new HashMap<>();
-        json.put("message", icndb.getRandomJoke());
+        String messageTag = config.getProperty("messageTag", String.class);
+        json.put(messageTag, icndb.getRandomJoke());
         return Response.ok(json).build();
     }
 }

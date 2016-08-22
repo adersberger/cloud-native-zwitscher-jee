@@ -101,7 +101,8 @@
           },
           "env": {
             "PORT": "12340",
-            "CONSUL": "consul.infrastructure.zwitscher.marathon.mesos:8500"
+            "CONSUL": "consul.infrastructure.zwitscher.marathon.mesos:8500",
+            "CONFIG_ENV" : "zwitscher"
           },
           "args": [
             "-Xmx256m"
