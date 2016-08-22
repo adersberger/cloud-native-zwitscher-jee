@@ -36,6 +36,7 @@ import org.cfg4j.source.consul.ConsulConfigurationSourceBuilder;
 import org.cfg4j.source.context.environment.ImmutableEnvironment;
 import org.cfg4j.source.context.filesprovider.ConfigFilesProvider;
 import org.cfg4j.source.reload.strategy.PeriodicalReloadStrategy;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -49,6 +50,7 @@ public class TestConfiguration {
 
     private String CONFIG_ENV = "zwitscher-test";
 
+    @Ignore
     @Test
     public void testConsulConfiguration() {
         //consul configuration source
@@ -89,6 +91,7 @@ public class TestConfiguration {
         assertThat(key2, equalTo("more success!"));
     }
 
+    @Ignore
     @Test
     public void testFallbackConfiguration() {
         //file configuration source
