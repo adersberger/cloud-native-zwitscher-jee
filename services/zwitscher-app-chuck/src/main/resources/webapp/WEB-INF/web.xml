@@ -4,7 +4,6 @@
 
     <!-- Hystrix Metrics Stream for Hystrix Dashboard-->
     <servlet>
-        <description></description>
         <display-name>HystrixMetricsStreamServlet</display-name>
         <servlet-name>HystrixMetricsStreamServlet</servlet-name>
         <servlet-class>com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet</servlet-class>
@@ -23,6 +22,16 @@
     <servlet-mapping>
         <servlet-name>metrics</servlet-name>
         <url-pattern>/metrics/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Prometheus Exporter Servlet -->
+    <servlet>
+        <servlet-name>prometheusexporter</servlet-name>
+        <servlet-class>io.prometheus.client.exporter.MetricsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>prometheusexporter</servlet-name>
+        <url-pattern>/prometheus/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
