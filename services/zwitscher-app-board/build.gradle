@@ -1,31 +1,11 @@
-apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = "de.qaware.playground.zwitscher.board.Main"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    jcenter()
+ext {
+    applicationPort = 12341 //port to be used in task application:run
 }
 
-dependencies {
-    compile 'com.kumuluz.ee:kumuluzee-core:2.0.0'
-    compile 'com.kumuluz.ee:kumuluzee-servlet-jetty:2.0.0'
-    compile 'com.kumuluz.ee:kumuluzee-jax-rs-jersey:2.0.0'
-    compile 'com.kumuluz.ee:kumuluzee-cdi-weld:2.0.0'
-    compile 'com.thetransactioncompany:cors-filter:2.1'
-    compile 'com.orbitz.consul:consul-client:0.12.3'
-    compile 'io.mikael:urlbuilder:2.0.7'
-}
-
-task copyDependencies(type: Copy) {
-    from configurations.compile
-    into 'build/dependency'
-}
-
-sourceSets {
-    main {
-        output.resourcesDir = "build/classes"
-        output.classesDir = 'build/classes'
-    }
+//set appropriate KumuluzEE listening port when application:run
+tasks.withType(JavaExec) {
+    environment = ['PORT': applicationPort]
 }
