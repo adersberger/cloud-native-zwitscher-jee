@@ -29,10 +29,20 @@ import org.slf4j.LoggerFactory;
 
 public class Main {
 
-    public static final Logger LOG = LoggerFactory.getLogger(ChuckJokeApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChuckJokeApplication.class);
 
+    /**
+     * Starts the micro service container.
+     *
+     * Requires environment variable "PORT" according
+     * on what port to listen.
+     *
+     * @param args no arguments evaluated
+     */
     public static void main(String[] args) {
         LOG.info("Port: " + System.getenv("PORT"));
+        //disable DNS caching
+        java.security.Security.setProperty("networkaddress.cache.ttl", "0" );
         com.kumuluz.ee.EeApplication.main(args);
     }
 }
