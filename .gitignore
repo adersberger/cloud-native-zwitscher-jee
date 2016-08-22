@@ -18,3 +18,4 @@ TODO.adoc
 /services/zwitscher-app-chuck/build/
 /services/zwitscher-app-history/build/
 /infrastructure/zwitscher-cluster/packet-terraform/
+/infrastructure/zwitscher-diagnosability/bin/data/
