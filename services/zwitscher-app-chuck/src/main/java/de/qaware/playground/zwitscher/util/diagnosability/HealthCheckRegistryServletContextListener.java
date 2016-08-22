@@ -21,8 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck.util.servicediscovery;
+package de.qaware.playground.zwitscher.util.diagnosability;
 
-public interface IServiceDiscovery {
-    void registerService(String serviceName, String servicePath);
+import com.codahale.metrics.health.HealthCheckRegistry;
+import com.codahale.metrics.servlets.HealthCheckServlet;
+
+import javax.servlet.annotation.WebListener;
+
+@WebListener
+public class HealthCheckRegistryServletContextListener extends HealthCheckServlet.ContextListener {
+
+    private static final HealthCheckRegistry HEALTH_CHECK_REGISTRY = new HealthCheckRegistry();
+
+    public static HealthCheckRegistry getHealthCheckRegistryInstance() {
+        return HEALTH_CHECK_REGISTRY;
+    }
+
+    @Override
+    protected HealthCheckRegistry getHealthCheckRegistry() {
+        return HEALTH_CHECK_REGISTRY;
+    }
+
 }

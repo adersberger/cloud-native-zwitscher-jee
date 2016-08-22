@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck.util.servicediscovery.impl;
+package de.qaware.playground.zwitscher.util.servicediscovery.impl;
 
 import com.ecwid.consul.v1.ConsulClient;
 import com.ecwid.consul.v1.agent.model.NewService;
 import com.google.common.io.Files;
 import com.google.common.net.HostAndPort;
-import de.qaware.playground.zwitscher.chuck.util.servicediscovery.IServiceDiscovery;
+import de.qaware.playground.zwitscher.util.servicediscovery.IServiceDiscovery;
 import io.mikael.urlbuilder.UrlBuilder;
 import org.slf4j.Logger;
 
@@ -70,6 +70,9 @@ public class ConsulFabioServiceDiscovery implements IServiceDiscovery {
     private Logger logger;
     private static final long HEALTHCHECK_INTERVAL = 2L;
 
+    public ConsulFabioServiceDiscovery() {
+    }
+
     /**
      * Registeres a service
      *
@@ -105,7 +108,7 @@ public class ConsulFabioServiceDiscovery implements IServiceDiscovery {
         service.setName(serviceName);
         service.setPort(applicationPort);
         service.setAddress(applicationHost);
-        List<String> tags = new ArrayList<String>();
+        List<String> tags = new ArrayList<>();
         tags.add(fabioServiceTag);
         service.setTags(tags);
         //register health check
@@ -116,7 +119,7 @@ public class ConsulFabioServiceDiscovery implements IServiceDiscovery {
         client.agentServiceRegister(service);
     }
 
-    private String getOutboundHost() {
+    public static String getOutboundHost() {
         String hostName = System.getenv(HOSTNAME_ENVVAR);
         String host = System.getenv(HOST_ENVVAR);
         if (hostName == null && host == null) return DEFAULT_HOST;
@@ -127,7 +130,6 @@ public class ConsulFabioServiceDiscovery implements IServiceDiscovery {
             try {
                 lines = Files.readLines(etcHosts, Charset.defaultCharset());
             } catch (IOException e) {
-                logger.error("No /etc/hosts found. Returning default host (localhost).");
                 return DEFAULT_HOST;
             }
             for (String line: lines){
@@ -140,13 +142,13 @@ public class ConsulFabioServiceDiscovery implements IServiceDiscovery {
         }
     }
 
-    private int getOutboundPort() {
+    public static int getOutboundPort() {
         String portEnv = System.getenv(PORT_ENVVAR);
         if (portEnv == null) return DEFAULT_PORT;
         return Integer.valueOf(portEnv);
     }
 
-    private HostAndPort getConsulHostAndPort() {
+    public static HostAndPort getConsulHostAndPort() {
         String consulEnv = System.getenv(CONSUL_ENVVAR);
         if (consulEnv == null) return HostAndPort.fromString(CONSUL_DEFAULT_HOSTANDPORT);
         else return HostAndPort.fromString(consulEnv);

@@ -21,25 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck.util.diagnosability;
+package de.qaware.playground.zwitscher.util.diagnosability;
 
-import com.codahale.metrics.health.HealthCheckRegistry;
-import com.codahale.metrics.servlets.HealthCheckServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.servlet.annotation.WebListener;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
 
-@WebListener
-public class HealthCheckRegistryServletContextListener extends HealthCheckServlet.ContextListener {
+/**
+ * Produces a ready-to use Logger to be injected into a CDI bean.
+ *
+ * Usage:
+ * <code>
+ * @Inject
+ * private Logger logger;
+ * </code>
+ */
+@ApplicationScoped
+public class Slf4jLoggerProducer {
 
-    private static final HealthCheckRegistry HEALTH_CHECK_REGISTRY = new HealthCheckRegistry();
-
-    public static HealthCheckRegistry getHealthCheckRegistryInstance() {
-        return HEALTH_CHECK_REGISTRY;
-    }
-
-    @Override
-    protected HealthCheckRegistry getHealthCheckRegistry() {
-        return HEALTH_CHECK_REGISTRY;
+    @Produces
+    public Logger produceLogger(InjectionPoint injectionPoint) {
+        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
 
 }

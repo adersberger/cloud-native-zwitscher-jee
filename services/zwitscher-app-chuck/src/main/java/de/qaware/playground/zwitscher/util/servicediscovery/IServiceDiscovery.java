@@ -21,28 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck.util.diagnosability;
+package de.qaware.playground.zwitscher.util.servicediscovery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-
-/**
- * Produces a ready-to use Logger to be injected into a CDI bean.
- *
- * Usage:
- * <code>
- * @Inject
- * private Logger logger;
- * </code>
- */
-public class Slf4jLoggerProducer {
-
-    @Produces
-    public Logger produceLogger(InjectionPoint injectionPoint) {
-        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
-    }
-
+public interface IServiceDiscovery {
+    void registerService(String serviceName, String servicePath);
 }
