@@ -1,10 +1,10 @@
 #!/bin/bash
 
 APP_GROUP="/zwitscher"
-MARATHON_FILE="./zwitscher/marathon-appgroup.json"
+MARATHON_FILE="./zwitscher-cluster/marathon-appgroup.json"
 echo "Starting ${APP_GROUP} on DC/OS (Marathon)..."
 
-if [ -n 'dcos marathon group list | grep -n $APP_GROUP' ]
+if dcos marathon group list | grep -n $APP_GROUP
   then
     echo "Group $APP_GROUP already exists. Updating..."
     dcos marathon group update ${APP_GROUP} < ${MARATHON_FILE}
