@@ -36,12 +36,14 @@ public class Main {
      * Requires environment variable "PORT" according
      * on what port to listen.
      *
+     * Requires environment variable "CONFIG_ENV" according
+     * to what configuration environment should be set.
+     *
      * @param args no arguments evaluated
      */
     public static void main(String[] args) {
         LOG.info("Port: " + System.getenv("PORT"));
-        //disable DNS caching
-        java.security.Security.setProperty("networkaddress.cache.ttl", "0" );
+        java.security.Security.setProperty("networkaddress.cache.ttl", "0" ); //disable DNS caching
         com.kumuluz.ee.EeApplication.main(args);
     }
 }
