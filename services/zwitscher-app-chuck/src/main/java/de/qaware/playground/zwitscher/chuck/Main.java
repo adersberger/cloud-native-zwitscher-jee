@@ -23,13 +23,12 @@
  */
 package de.qaware.playground.zwitscher.chuck;
 
-import de.qaware.playground.zwitscher.chuck.rest.ChuckJokeApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChuckJokeApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     /**
      * Starts the micro service container.
