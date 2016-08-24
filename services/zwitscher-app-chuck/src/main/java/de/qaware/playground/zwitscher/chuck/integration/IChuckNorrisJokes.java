@@ -21,36 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck;
+package de.qaware.playground.zwitscher.chuck.integration;
 
-import de.qaware.playground.zwitscher.chuck.integration.IChuckNorrisJokes;
-import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.slf4j.Logger;
+import rx.Observable;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+/**
+ * Integrates Chuck Norris jokes into the system
+ */
+public interface IChuckNorrisJokes {
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.core.IsNot.not;
+    /**
+     * Returns a random Chuck Norris joke.
+     *
+     * No keyword search provided as every Chuck
+     * Norris joke matches on every keyword
+     *
+     * @return a random Chuck Norris joke
+     */
+    String getRandomJoke();
 
-@RunWith(CdiTestRunner.class)
-public class TestIcndbIntegration {
 
-    @Inject
-    @Named("chucknorrisjoke-icndb")
-    private IChuckNorrisJokes chuckNorrisJokes;
-
-    @Inject
-    private Logger logger;
-
-    @Test
-    public void testIntegration() {
-        String joke = chuckNorrisJokes.getRandomJoke();
-        logger.info(joke);
-        assertThat(joke.trim(), not(isEmptyString()));
-    }
-
+    /**
+     * Async style getRandomJoke()
+     *
+     * @return Observable random joke
+     */
+    Observable<String> getRandomJokeObservable();
 }

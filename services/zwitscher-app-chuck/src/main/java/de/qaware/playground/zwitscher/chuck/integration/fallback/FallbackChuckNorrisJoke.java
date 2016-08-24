@@ -21,36 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck;
+package de.qaware.playground.zwitscher.chuck.integration.fallback;
 
 import de.qaware.playground.zwitscher.chuck.integration.IChuckNorrisJokes;
-import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
+import rx.Observable;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.core.IsNot.not;
+/**
+ * The last Chuck Norris joke standing.
+ *
+ * (c) on the joke by ourselves
+ */
+@ApplicationScoped
+@Named("chucknorrisjoke-fallback")
+public class FallbackChuckNorrisJoke implements IChuckNorrisJokes {
 
-@RunWith(CdiTestRunner.class)
-public class TestIcndbIntegration {
-
-    @Inject
-    @Named("chucknorrisjoke-icndb")
-    private IChuckNorrisJokes chuckNorrisJokes;
+    private static final String FALLBACK_JOKE = "Every Chuck Norris joke matches on every keyword.";
 
     @Inject
     private Logger logger;
 
-    @Test
-    public void testIntegration() {
-        String joke = chuckNorrisJokes.getRandomJoke();
-        logger.info(joke);
-        assertThat(joke.trim(), not(isEmptyString()));
+    @Override
+    public String getRandomJoke() {
+        logger.error("Default Chuck Norris joke picked!");
+        return FALLBACK_JOKE;
     }
 
+    @Override
+    public Observable<String> getRandomJokeObservable() {
+        return Observable.just(getRandomJoke());
+    }
 }

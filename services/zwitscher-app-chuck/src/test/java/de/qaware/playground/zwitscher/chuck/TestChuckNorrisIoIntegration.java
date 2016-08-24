@@ -33,14 +33,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.text.IsEmptyString.isEmptyString;
 
 @RunWith(CdiTestRunner.class)
-public class TestIcndbIntegration {
-
+public class TestChuckNorrisIoIntegration {
     @Inject
-    @Named("chucknorrisjoke-icndb")
+    @Named("chucknorrisjoke-chucknorrisio")
     private IChuckNorrisJokes chuckNorrisJokes;
 
     @Inject
@@ -52,5 +51,4 @@ public class TestIcndbIntegration {
         logger.info(joke);
         assertThat(joke.trim(), not(isEmptyString()));
     }
-
 }

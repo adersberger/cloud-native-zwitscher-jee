@@ -21,18 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.qaware.playground.zwitscher.chuck.integration;
+package de.qaware.playground.zwitscher.chuck.integration.icndb;
 
 import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixObservableCommand;
+import de.qaware.playground.zwitscher.chuck.integration.IChuckNorrisJokes;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
 import org.slf4j.Logger;
 import rx.Observable;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -40,54 +42,71 @@ import java.util.concurrent.ExecutionException;
  * Obtains a random Chuck Norris joke from THE INTERNET CHUCK NORRIS DATABASE.
  *
  * JSON response from ICNDB (http://api.icndb.com):<br />
- * <code>
+ * <pre><code>
  * { "type": "success",
  *   "value": {
  *      "id": 419,
  *      "joke": "JOKE",
  *      "categories": []
  *  }}
- *  </code>
+ *  </pre></code>
  */
 @RequestScoped
-public class IcndbIntegration {
+@Named("chucknorrisjoke-icndb")
+public class IcndbIntegration implements IChuckNorrisJokes {
 
-    private static final String FALLBACK_JOKE = "The original title for Alien vs. Predator was Alien and Predator vs " +
-            "Chuck Norris. The film was cancelled shortly after going into preproduction. No one would pay nine dollars " +
-            "to see a movie fourteen seconds long.";
+    private static final int TIMEOUT = 3000;
+
+    @Inject
+    @Named("chucknorrisjoke-chucknorrisio")
+    private IChuckNorrisJokes fallback;
 
     @Inject
     private Logger logger;
 
-    public String getRandomJoke(){
+    @Override
+    public String getRandomJoke() {
         IcndbIntegrationCommand cmd = new IcndbIntegrationCommand();
-        Response response;
         try {
-            response = cmd.observe().toBlocking().toFuture().get();
-            Map<String, Map<String, String>> json = response.readEntity(Map.class);
-            return json.get("value").get("joke");
+            return cmd.observe().toBlocking().toFuture().get();
         } catch (InterruptedException | ExecutionException e) {
-            logger.error("ICNDB not accessible. default joke picked", e);
-            return FALLBACK_JOKE;
+            logger.error("ICNDB not available!", e);
+            throw new RuntimeException(e);
         }
-
     }
 
-    private class IcndbIntegrationCommand extends HystrixObservableCommand<Response> {
+    @Override
+    public Observable<String> getRandomJokeObservable() {
+        return new IcndbIntegrationCommand().observe();
+    }
+
+    private class IcndbIntegrationCommand extends HystrixObservableCommand<String> {
 
         IcndbIntegrationCommand() {
-            super(HystrixCommandGroupKey.Factory.asKey("zwitscher"));
+            super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("zwitscher"))
+                    .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                            .withExecutionTimeoutInMilliseconds(TIMEOUT)));
         }
 
         @Override
-        protected Observable<Response> construct() {
+        protected Observable<String> construct() {
+            logger.info("Requesting api.icndb.com async");
             return RxObservable.newClient()
                     .target("http://api.icndb.com")
                     .path("jokes/random")
                     .request(MediaType.APPLICATION_JSON_TYPE)
                     .rx()
-                    .get();
+                    .get()
+                    .map(response -> {
+                        Map<String, Map<String, String>> json = response.readEntity(Map.class);
+                        return json.get("value").get("joke");
+                    });
+        }
+
+        @Override
+        protected Observable<String> resumeWithFallback() {
+            logger.error("Requesting api.icndb.com failed. Performing fallback.");
+            return fallback.getRandomJokeObservable();
         }
     }
-
 }

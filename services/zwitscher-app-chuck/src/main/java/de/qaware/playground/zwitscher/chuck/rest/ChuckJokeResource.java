@@ -24,11 +24,12 @@
 package de.qaware.playground.zwitscher.chuck.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import de.qaware.playground.zwitscher.chuck.integration.IcndbIntegration;
+import de.qaware.playground.zwitscher.chuck.integration.IChuckNorrisJokes;
 import org.cfg4j.provider.ConfigurationProvider;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,18 +42,24 @@ import java.util.Map;
 public class ChuckJokeResource {
 
     @Inject
-    private IcndbIntegration icndb;
+    @Named("chucknorrisjoke-icndb")
+    private IChuckNorrisJokes chuckNorrisJokes;
 
     @Inject
     private ConfigurationProvider config;
 
+    /**
+     * Requests a random Chuck Norris joke from external services.
+     *
+     * @return a random Chuck Norris joke
+     */
     @GET
     @Timed
     @Produces("application/json")
     public Response getJoke() {
         Map<String, String> json = new HashMap<>();
         String messageTag = config.getProperty("messageTag", String.class);
-        json.put(messageTag, icndb.getRandomJoke());
+        json.put(messageTag, chuckNorrisJokes.getRandomJoke());
         return Response.ok(json).build();
     }
 }

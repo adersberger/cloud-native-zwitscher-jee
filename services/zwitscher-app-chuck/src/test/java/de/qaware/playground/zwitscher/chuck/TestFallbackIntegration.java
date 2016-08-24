@@ -32,25 +32,28 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.text.IsEmptyString.isEmptyString;
 
 @RunWith(CdiTestRunner.class)
-public class TestIcndbIntegration {
-
+public class TestFallbackIntegration {
     @Inject
-    @Named("chucknorrisjoke-icndb")
+    @Named("chucknorrisjoke-fallback")
     private IChuckNorrisJokes chuckNorrisJokes;
 
     @Inject
     private Logger logger;
 
     @Test
-    public void testIntegration() {
+    public void testIntegration() throws ExecutionException, InterruptedException {
         String joke = chuckNorrisJokes.getRandomJoke();
         logger.info(joke);
         assertThat(joke.trim(), not(isEmptyString()));
-    }
 
+        String asyncJoke = chuckNorrisJokes.getRandomJokeObservable().toBlocking().toFuture().get();
+        assertThat(joke.trim(), not(isEmptyString()));
+    }
 }
