@@ -24,7 +24,7 @@
 package de.qaware.playground.zwitscher.util.configuration;
 
 import com.google.common.net.HostAndPort;
-import de.qaware.playground.zwitscher.util.diagnosability.MetricRegistryServletContextListener;
+import de.qaware.playground.zwitscher.util.diagnosability.MetricsProvider;
 import de.qaware.playground.zwitscher.util.servicediscovery.impl.ConsulFabioServiceDiscovery;
 import org.cfg4j.provider.ConfigurationProvider;
 import org.cfg4j.provider.ConfigurationProviderBuilder;
@@ -95,7 +95,7 @@ public class Cfg4JConfigurationProvider {
 
             cfgProvider = new ConfigurationProviderBuilder()
                     .withConfigurationSource(mergedConfigSource)
-                    .withMetrics(MetricRegistryServletContextListener.getMetricRegistryInstance(), "cfg4j")
+                    .withMetrics(MetricsProvider.getMetricRegistry(), "cfg4j")
                     .withReloadStrategy(new PeriodicalReloadStrategy(2, TimeUnit.SECONDS))
                     .withEnvironment(new ImmutableEnvironment(configEnv))
                     .build();

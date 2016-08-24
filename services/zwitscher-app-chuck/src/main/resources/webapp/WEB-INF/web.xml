@@ -10,9 +10,8 @@
         <listener-class>de.qaware.playground.zwitscher.util.diagnosability.MetricRegistryServletContextListener</listener-class>
     </listener>
 
-    <!-- Hystrix Metrics Stream for Hystrix Dashboard-->
+    <!-- Hystrix MetricsProvider Stream for Hystrix Dashboard-->
     <servlet>
-        <display-name>HystrixMetricsStreamServlet</display-name>
         <servlet-name>HystrixMetricsStreamServlet</servlet-name>
         <servlet-class>com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet</servlet-class>
     </servlet>
@@ -22,7 +21,7 @@
         <url-pattern>/hystrix.stream</url-pattern>
     </servlet-mapping>
 
-    <!-- Metrics Admin Servlet -->
+    <!-- MetricsProvider Admin Servlet -->
     <servlet>
         <servlet-name>metrics</servlet-name>
         <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>

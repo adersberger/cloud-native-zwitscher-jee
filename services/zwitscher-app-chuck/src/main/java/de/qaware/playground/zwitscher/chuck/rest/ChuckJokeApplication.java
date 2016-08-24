@@ -27,7 +27,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener;
 import com.netflix.hystrix.contrib.codahalemetricspublisher.HystrixCodaHaleMetricsPublisher;
 import com.netflix.hystrix.strategy.HystrixPlugins;
-import de.qaware.playground.zwitscher.util.diagnosability.MetricRegistryServletContextListener;
 import de.qaware.playground.zwitscher.util.servicediscovery.IServiceDiscovery;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.dropwizard.DropwizardExports;
@@ -42,22 +41,21 @@ public class ChuckJokeApplication extends ResourceConfig {
 
     @Inject
     public ChuckJokeApplication(
-            @Named("consul-fabio")IServiceDiscovery serviceDiscovery) {
+            @Named("consul-fabio") IServiceDiscovery serviceDiscovery,
+            MetricRegistry metricRegistry) {
         super();
         register(ChuckJokeResource.class);
 
         //Instrument application with metrics
-        MetricRegistry METRIC_REGISTRY = MetricRegistryServletContextListener.getMetricRegistryInstance();
-        register(new InstrumentedResourceMethodApplicationListener(METRIC_REGISTRY));
+        register(new InstrumentedResourceMethodApplicationListener(metricRegistry));
         HystrixPlugins.getInstance().registerMetricsPublisher(
-                new HystrixCodaHaleMetricsPublisher(METRIC_REGISTRY));
+                new HystrixCodaHaleMetricsPublisher(metricRegistry));
 
         //Register Prometheus metric exporter
-        CollectorRegistry.defaultRegistry.register(new DropwizardExports(METRIC_REGISTRY));
+        CollectorRegistry.defaultRegistry.register(new DropwizardExports(metricRegistry));
 
         //Register service
         serviceDiscovery.registerService("zwitscher-chuck", "/chuck/joke");
-
     }
 
 }
