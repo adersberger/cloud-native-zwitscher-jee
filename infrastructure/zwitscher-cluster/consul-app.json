@@ -1,5 +1,5 @@
 {
-  "id": "consul",
+  "id": "zwitscher/infrastructure/consul",
   "cpus": 1,
   "mem": 256,
   "disk": 0,

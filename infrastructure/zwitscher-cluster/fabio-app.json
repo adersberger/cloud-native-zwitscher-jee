@@ -1,5 +1,5 @@
 {
-  "id": "fabio",
+  "id": "zwitscher/infrastructure/fabio",
   "cpus": 1,
   "mem": 256,
   "disk": 0,

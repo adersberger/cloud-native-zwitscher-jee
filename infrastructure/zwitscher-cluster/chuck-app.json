@@ -1,5 +1,5 @@
 {
-  "id": "zwitscher-chuck",
+  "id": "zwitscher/services/zwitscher-chuck",
   "cpus": 1,
   "mem": 256,
   "disk": 0,
