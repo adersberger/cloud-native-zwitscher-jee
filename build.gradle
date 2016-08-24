@@ -38,7 +38,7 @@ subprojects {
         weldVersion = '2.3.3.Final' //required by KumuluzEE 2.0.0
         deltaSpikeVersion = '1.7.1'
         metricsVersion = '3.1.2'
-        hystrixVersion = '1.5.4'
+        hystrixVersion = '1.5.5'
     }
 
     dependencies {
