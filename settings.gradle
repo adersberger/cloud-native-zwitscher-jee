@@ -5,3 +5,5 @@ include 'services/zwitscher-app-history'
 project(":services/zwitscher-app-history").name = "zwitscher-app-history"
 include 'services/zwitscher-app-board'
 project(":services/zwitscher-app-board").name = "zwitscher-app-board"
+include 'services/zwitscher-util-jcloudee'
+project(":services/zwitscher-util-jcloudee").name = "zwitscher-util-jcloudee"
