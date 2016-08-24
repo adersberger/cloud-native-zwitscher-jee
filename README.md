@@ -8,7 +8,7 @@ will later be deployed and run on DC/OS.
 
 ## Used technologies
  * JEE Service Container: [KumuluzEE](https://ee.kumuluz.com)
- * API Gateway / Edge Server: [Fabio](https://github.com/eBay/fabio) or [Traefik](https://traefik.io)
+ * API Gateway / Edge Server: [Fabio](https://github.com/eBay/fabio)
  * Service Discovery: [Consul](https://www.consul.io)
  * Service Client: [Jersey](https://jersey.java.net) and [Hystrix](https://github.com/Netflix/Hystrix)
  * Configuration & Coordination: [Consul](https://www.consul.io)
