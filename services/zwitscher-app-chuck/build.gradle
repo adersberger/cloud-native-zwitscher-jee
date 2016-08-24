@@ -2,10 +2,18 @@ apply plugin: 'application'
 mainClassName = "de.qaware.playground.zwitscher.chuck.Main"
 
 ext {
-    applicationPort = 12340 //port to be used in task application:run
+    applicationPort = 12340                //application listening port
+    configurationEnvironment = "zwitscher" //startup configuration environment
+}
+
+dependencies {
+    compile project(':zwitscher-util-jcloudee')
 }
 
 //set appropriate KumuluzEE listening port when application:run
 tasks.withType(JavaExec) {
-    environment = ['PORT': applicationPort]
+    environment = [
+            'PORT': applicationPort,
+            'CONFIG_ENV': configurationEnvironment
+    ]
 }
