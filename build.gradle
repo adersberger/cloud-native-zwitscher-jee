@@ -159,3 +159,23 @@ import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
 
 task dockerInfo(type: DockerInfo) {}
 task dockerVersion(type: DockerVersion) {}
+
+task deployToMarathon(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './marathonized-up.sh'
+}
+
+task undeployFromMarathon(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './marathonized-down.sh'
+}
+
+task deployToDocker(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './dockerized-up.sh'
+}
+
+task undeployFromDocker(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './dockerized-down.sh'
+}
