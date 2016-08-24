@@ -40,7 +40,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
  * </code>
  */
 @ApplicationScoped
-public class Slf4jLoggerProducer {
+public class Slf4jLoggerProvider {
 
     @Produces
     public Logger produceLogger(InjectionPoint injectionPoint) {
