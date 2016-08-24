@@ -179,3 +179,18 @@ task undeployFromDocker(type: Exec) {
     workingDir './infrastructure'
     commandLine './dockerized-down.sh'
 }
+
+task startLocalConsul(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './local-consul-up.sh'
+}
+
+task startLocalFabio(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './local-fabio-up.sh'
+}
+
+task startLocalPrometheus(type: Exec) {
+    workingDir './infrastructure'
+    commandLine './local-prometheus-up.sh'
+}
