@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * primary Consul config values and secondary (in case of failure
  * or non-existing value) file configuration (in application.yaml).
  *
- * Requires environment variable CONFIG_ENV set to path of config. If
+ * Requires environment variable or system property CONFIG_ENV set to path of config. If
  * no according envvar is defined, CONFIG_ENV is set to "config".
  * In case of Consul CONFIG_ENV is the path to the key-value pairs and in
  * case of the config file this is the path to the application.yaml
@@ -90,6 +90,7 @@ public class Cfg4JConfigurationProvider {
             MergeConfigurationSource mergedConfigSource = new MergeConfigurationSource(fileSource, fallbackConfigSource);
 
             String configEnv = System.getenv(CONFIG_ENV);
+            if (configEnv == null) configEnv = System.getProperty(CONFIG_ENV);
             if (configEnv == null) configEnv = DEFAULT_CONFIG_ENV;
 
             cfgProvider = new ConfigurationProviderBuilder()
