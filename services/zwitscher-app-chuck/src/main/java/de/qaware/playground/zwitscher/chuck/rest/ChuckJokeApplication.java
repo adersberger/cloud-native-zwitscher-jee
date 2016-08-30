@@ -28,12 +28,12 @@ import com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListene
 import com.netflix.hystrix.contrib.codahalemetricspublisher.HystrixCodaHaleMetricsPublisher;
 import com.netflix.hystrix.strategy.HystrixPlugins;
 import de.qaware.playground.zwitscher.util.servicediscovery.IServiceDiscovery;
+import de.qaware.playground.zwitscher.util.servicediscovery.impl.ConsulFabio;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.dropwizard.DropwizardExports;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.ws.rs.ApplicationPath;
 
 @ApplicationPath("/chuck")
@@ -41,7 +41,7 @@ public class ChuckJokeApplication extends ResourceConfig {
 
     @Inject
     public ChuckJokeApplication(
-            @Named("consul-fabio") IServiceDiscovery serviceDiscovery,
+            @ConsulFabio IServiceDiscovery serviceDiscovery,
             MetricRegistry metricRegistry) {
         super();
         register(ChuckJokeResource.class);

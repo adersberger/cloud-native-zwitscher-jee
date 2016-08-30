@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -59,10 +58,10 @@ import java.util.List;
  * DC/OS (Marathon) env:
  * - HOST: $HOST envvar
  * - PORT: $PORT envvar
- * - Detect Marathon: $MARATHON_APP_ID gesetzt
+ * - Detect Marathon: $MARATHON_APP_ID set
  *
  */
-@Named("consul-fabio")
+@ConsulFabio
 @ApplicationScoped
 public class ConsulFabioServiceDiscovery implements IServiceDiscovery {
 
