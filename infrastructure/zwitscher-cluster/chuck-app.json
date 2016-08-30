@@ -1,26 +1,39 @@
 {
-  "id": "zwitscher/services/zwitscher-chuck",
+  "id": "zwitscher-chuck",
   "cpus": 1,
   "mem": 256,
   "disk": 0,
   "instances": 1,
+  "labels": {
+    "LAUNCHPAD_COLOR" : "RED"
+  },
   "container": {
     "docker": {
       "image": "adersberger/zwitscher-app-chuck:1.0.0-SNAPSHOT",
       "forcePullImage": true,
       "privileged": false,
       "network": "HOST",
-      "portDefinitions": [
-        { "port": 12340, "protocol": "tcp", "name": "rest-api" }
-      ],
+      "ports": [12340],
       "requirePorts" : true
     }
   },
   "env": {
     "PORT": "12340",
-    "CONSUL": "consul.marathon.mesos:8500"
+    "CONSUL": "consul.marathon.mesos:8500",
+    "CONFIG_ENV" : "zwitscher"
   },
   "args": [
     "-Xmx256m"
-  ]
+  ],
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "port": 12340,
+      "path": "/metrics/ping",
+      "intervalSeconds": 10,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 3
+    }
+  ],
+  "constraints": [["hostname", "UNIQUE"]]
 }

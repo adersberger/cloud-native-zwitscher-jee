@@ -17,14 +17,7 @@
               "forcePullImage": true,
               "privileged": false,
               "network": "HOST",
-              "portDefinitions": [
-                { "port": 8300, "protocol": "tcp", "name": "server-rpc" },
-                { "port": 8301, "protocol": "tcp", "name": "serf-lan" },
-                { "port": 8302, "protocol": "tcp", "name": "serf-wan" },
-                { "port": 8400, "protocol": "tcp", "name": "cli-rpc" },
-                { "port": 8500, "protocol": "tcp", "name": "http-api" },
-                { "port": 8600, "protocol": "udp", "name": "dns" }
-              ],
+              "ports": [8300, 8301, 8302, 8400, 8500, 8600],
               "requirePorts" : true
             }
           },
@@ -57,10 +50,7 @@
               "forcePullImage": true,
               "privileged": false,
               "network": "HOST",
-              "portDefinitions": [
-                { "port": 9998, "protocol": "tcp", "name": "web-ui" },
-                { "port": 9999, "protocol": "tcp", "name": "proxy-port" }
-              ],
+              "ports": [9998, 9999],
               "requirePorts" : true
             }
           },
@@ -86,16 +76,14 @@
           "cpus": 1,
           "mem": 256,
           "disk": 0,
-          "instances": 1,
+          "instances": 2,
           "container": {
             "docker": {
               "image": "adersberger/zwitscher-app-chuck:1.0.0-SNAPSHOT",
               "forcePullImage": true,
               "privileged": false,
               "network": "HOST",
-              "portDefinitions": [
-                { "port": 12340, "protocol": "tcp", "name": "rest-api" }
-              ],
+              "ports": [12340],
               "requirePorts" : true
             }
           },
@@ -117,6 +105,7 @@
               "maxConsecutiveFailures": 3
             }
           ],
+          "constraints": [["hostname", "UNIQUE"]],
           "dependencies": [
             "/zwitscher/infrastructure/consul"
           ]

@@ -1,28 +1,34 @@
 {
-  "id": "zwitscher/infrastructure/consul",
+  "id": "consul",
   "cpus": 1,
   "mem": 256,
   "disk": 0,
   "instances": 1,
   "cmd": "/bin/consul agent -server -ui -advertise=$HOST -config-dir=/config -data-dir=/tmp/consul -bootstrap-expect=1 -node=consul-server -client=0.0.0.0",
+  "labels": {
+    "LAUNCHPAD_COLOR" : "PURPLE"
+  },
   "container": {
     "docker": {
       "image": "gliderlabs/consul-server:0.6",
       "forcePullImage": true,
       "privileged": false,
       "network": "HOST",
-      "portDefinitions": [
-        { "port": 8300, "protocol": "tcp", "name": "server-rpc" },
-        { "port": 8301, "protocol": "tcp", "name": "serf-lan" },
-        { "port": 8302, "protocol": "tcp", "name": "serf-wan" },
-        { "port": 8400, "protocol": "tcp", "name": "cli-rpc" },
-        { "port": 8500, "protocol": "tcp", "name": "http-api" },
-        { "port": 8600, "protocol": "udp", "name": "dns" }
-      ],
+      "ports": [8300, 8301, 8302, 8400, 8500, 8600],
       "requirePorts" : true
     }
   },
   "env": {
     "GOMAXPROCS": "10"
-  }
+  },
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "port": 8500,
+      "path": "/v1/status/leader",
+      "intervalSeconds": 10,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 3
+    }
+  ]
 }

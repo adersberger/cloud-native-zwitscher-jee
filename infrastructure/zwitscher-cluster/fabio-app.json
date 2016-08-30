@@ -1,5 +1,5 @@
 {
-  "id": "zwitscher/infrastructure/fabio",
+  "id": "fabio",
   "cpus": 1,
   "mem": 256,
   "disk": 0,
@@ -7,17 +7,28 @@
   "env": {
     "registry_consul_addr": "consul.marathon.mesos:8500"
   },
+  "labels": {
+    "LAUNCHPAD_COLOR" : "LIGHT_GREEN"
+  },
   "container": {
     "docker": {
       "image": "magiconair/fabio:latest",
       "forcePullImage": true,
       "privileged": false,
       "network": "HOST",
-      "portDefinitions": [
-        { "port": 9998, "protocol": "tcp", "name": "web-ui" },
-        { "port": 9999, "protocol": "tcp", "name": "proxy-port" }
-      ],
+      "ports": [9998, 9999],
       "requirePorts" : true
     }
-  }
+  },
+  "acceptedResourceRoles":["slave_public"],
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "port": 9998,
+      "path": "/health",
+      "intervalSeconds": 10,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 3
+    }
+  ]
 }
